@@ -1,0 +1,89 @@
+$ apt install -y bind9 bind9utils bind9-doc dnsutils
+$ cd /etc/bind
+$ vim named.conf.options
+forwarders {
+    1.1.1.1;
+    8.8.8.8;
+};
+
+dnssec-validation auto;
+
+allow-query { 10.23.0.0/22; };
+allow-recursion { 10.23.0.0/22; };
+recursion yes;
+
+$ mkdir lab.com
+$ cp named.conf.local lab.com/named.conf.lab.local
+$ vim named.conf.local
+zone "lab.com" {
+    type master;
+    file "/etc/bind/lab.com/lab.com.forward";
+    allow-update {none;};
+};
+
+zone "1.23.10.in-addr.arpa" {
+    type master;
+    file "/etc/bind/lab.com/lab.com.reverse";
+    allow-update {none;};
+};
+
+$ cp db.local lab.com/lab.com.forward
+$ cp db.127 lab.com/lab.com.reverse
+$ vim lab.com/lab.com.forward
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     lab.com. root.lab.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      lab.com.
+@       IN      A       10.23.1.80
+
+$ vim lab.com/lab.com.reverse
+;
+; BIND reverse data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     lab.com. root.lab.com. (
+                              1         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      lab.com.
+80      IN      PTR     lab.com.
+
+$ vim /etc/default/named
+RESOLVCONF=yes
+OPTIONS="-u bind -4"
+
+$ vim /etc/bind/named.conf
+include "/etc/bind/named.conf.options";
+include "/etc/bind/idnbisa.com/named.conf.lab.local";
+//include "/etc/bind/named.conf.default-zones";
+
+$ systemctl restart bind9
+$ named-checkzone idnbisa.com lab.com/lab.com.forward
+$ named-checkzone 10.23.1.80 lab.com/lab.com.reverse
+$ apt install resolvconf -y
+$ vim /etc/resolvconf/resolv.conf.d/head
+search lab.com
+nameserver 10.23.1.80
+nameserver 8.8.8.8
+$ resolvconf --enable-updates
+$ resolvconf -u
+$ nslookup lab.com
+Server:         10.23.1.80
+Address:        10.23.1.80#53
+
+Name:   lab.com
+Address: 10.23.1.80
+
+$ nslookup 10.23.1.80
+80.1.23.10.in-addr.arpa name = lab.com.
