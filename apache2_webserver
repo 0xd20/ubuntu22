@@ -1,0 +1,17 @@
+#### Install Apache2 ####
+
+# apt install apache2 -y
+# systemctl enable --now apache2 -y
+# systemtl status apache2
+
+#### cek status ####
+
+# ss -tulpn
+
+
+### ubah port apache2 ####
+
+# vim /etc/apache2/ports.conf
+ubah port 80 jadi port 81 dan save
+# systemctl restart apache2
+# verifikasi
