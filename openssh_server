@@ -1,0 +1,14 @@
+#### instalasi package openss-server ####
+
+# apt install openssh-server -y
+# systemctl enable --now sshd
+# systemtcl status sshd 
+
+jika ssh berjalan dengan normal maka statusnya running atau actived
+
+#### kofigurasi private key ####
+
+diclient (mobaxterm) jalankan perintah ini
+
+# ssh-keygen
+# ssh-copy-id user@ip_server
