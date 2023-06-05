@@ -69,7 +69,7 @@ include "/etc/bind/idnbisa.com/named.conf.lab.local";
 //include "/etc/bind/named.conf.default-zones";
 
 $ systemctl restart bind9
-$ named-checkzone idnbisa.com lab.com/lab.com.forward
+$ named-checkzone lab.com lab.com/lab.com.forward
 $ named-checkzone 10.23.1.80 lab.com/lab.com.reverse
 $ apt install resolvconf -y
 $ vim /etc/resolvconf/resolv.conf.d/head
