@@ -56,3 +56,6 @@ a2enconf phpmyadmin
 
 # reload
 $ systemctl reload apache2
+
+#verifikasi 
+$ domain:port/phpmyadmin
