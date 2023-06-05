@@ -1,0 +1,23 @@
+# apt install nginx -y
+# unlink /etc/nginx/sites-enabled/default
+# vim /etc/nginx/sites-available/reverse_proxy
+server {
+        listen 80;
+        server_name www.lab.com;
+
+        location / {
+                proxy_pass http://127.0.0.1:81/;
+        }
+}
+
+server {
+        listen 80;
+        server_name blog.lab.com;
+
+        location / {
+                proxy_pass http://127.0.0.1:82/;
+        }
+}
+
+# ln -s /etc/nginx/sites-available/reverse_proxy /etc/nginx/sites-enabled/
+# systemctl restart nginx
