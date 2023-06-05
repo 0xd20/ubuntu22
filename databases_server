@@ -1,1 +1,58 @@
 
+######## Install Mariadb Server ########
+
+# Install mariadb-server
+$ apt install mariadb-server -y
+
+# configure root password mariadb
+$ mysql_secure_installation
+
+# login mode interaktif mariadb
+$ mysql -u root -p
+
+######### Configure phpMyAdmin #########
+
+# install dependencies phpmyadmin
+$ apt install php php-zip php-json php-mbstring php-mysql
+
+# Download Packages phpmyadmin
+$ wget https://files.phpmyadmin.net/phpMyAdmin/5.2.1/phpMyAdmin-5.2.1-all-languages.tar.gz
+
+# extract
+$ tar xzvf phpMyAdmin-5.2.1-all-languages.tar.gz
+
+# pindah folder & ganti nama
+$ mkdir /usr/share/phpmyadmin/tmp
+
+# ubah user owner & group owner  
+chown -R www-data:www-data /usr/share/phpmyadmin
+
+# ubah permission
+chmod 777 /usr/share/phpmyadmin/tmp
+
+# vim /etc/apache2/conf-available/phpmyadmin.conf 
+$Alias /phpmyadmin /usr/share/phpmyadmin
+Alias /phpMyAdmin /usr/share/phpmyadmin
+
+<Directory /usr/share/phpmyadmin/>
+   AddDefaultCharset UTF-8
+   <IfModule mod_authz_core.c>
+      <RequireAny>
+      Require all granted
+     </RequireAny>
+   </IfModule>
+</Directory>
+
+<Directory /usr/share/phpmyadmin/setup/>
+   <IfModule mod_authz_core.c>
+     <RequireAny>
+       Require all granted
+     </RequireAny>
+   </IfModule>
+</Directory>
+
+# aktifkan
+a2enconf phpmyadmin 
+
+# reload
+$ systemctl reload apache2
