@@ -1,4 +1,4 @@
-$ apt install -y bind9 bind9utils bind9-doc dnsutils
+$ apt install -y bind9 bind9utils bind9-doc dnsutils resolvconf
 $ cd /etc/bind
 $ vim named.conf.options
 forwarders {
