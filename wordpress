@@ -1,2 +1,9 @@
 # wget https://wordpress.org/latest.tar.gz
 # tar xzvf latest.tar.gz
+# mv wordpress /var/www/
+# chown -R www-data:www-data /var/www/wordpress
+# mysql -u root -p
+# create database db_wp;
+# grant all privileges on db_wp.* to admin_wp@localhost identified by 'admin123';
+# flush privileges;
+# setup
